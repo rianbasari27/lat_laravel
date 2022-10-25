@@ -10,6 +10,7 @@
 </head>
 <body>
     <div class="container py-5">
+        @include('components.message')
         @yield('container')
     </div>
 
