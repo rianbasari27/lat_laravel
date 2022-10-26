@@ -70,7 +70,7 @@ class SiswaController extends Controller
             'no_telp' => $request->input('no_telp')
         ];
         Siswa::create($data);
-        return redirect('siswa')->with('success', 'Data berhasil ditambahkan.');
+        return redirect('/siswa')->with('success', 'Data berhasil ditambahkan.');
     }
 
     /**
@@ -81,7 +81,7 @@ class SiswaController extends Controller
      */
     public function show($id)
     {
-        $data = Siswa::where('nim', $id)->first();
+        $data = Siswa::where('id', $id)->first();
         return view('siswa.detail')->with('data', $data);
     }
 
@@ -93,7 +93,8 @@ class SiswaController extends Controller
      */
     public function edit($id)
     {
-        //
+        $data = Siswa::where('id', $id)->first();
+        return view('siswa.edit')->with('data', $data);
     }
 
     /**
@@ -105,7 +106,28 @@ class SiswaController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $request->validate(
+            [
+                'nama_siswa' => 'required',
+                'jurusan' => 'required',
+                'alamat' => 'required',
+            ],
+            [
+                'nama_siswa.required' => 'Nama siswa wajib diisi!',
+                'jurusan.required' => 'Jurusan wajib diisi!',
+                'alamat.required' => 'Alamat wajib diisi!'
+            ]
+        );
+
+        $data = [
+            'nama_siswa' => $request->input('nama_siswa'),
+            'jurusan' => $request->input('jurusan'),
+            'alamat' => $request->input('alamat'),
+            'email' => $request->input('email'),
+            'no_telp' => $request->input('no_telp')
+        ];
+        Siswa::where('id', $id)->update($data);
+        return redirect('/siswa')->with('success', 'Berhasil melakukan update data!');
     }
 
     /**
@@ -116,6 +138,7 @@ class SiswaController extends Controller
      */
     public function destroy($id)
     {
-        //
+        Siswa::where('id', $id)->delete();
+        return redirect('/siswa')->with('success', 'Data berhasil dihapus!');
     }
 }
